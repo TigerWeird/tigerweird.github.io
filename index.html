@@ -3,148 +3,232 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TigerWeird Studio - Home</title>
+  <title>Weird Studio | Portafolio</title>
+  <link rel="icon" href="Images/tab_icon.png" type="image/x-icon">
+
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
   <style>
-    body {
+    :root {
+      --negro: #0a0a0a;
+      --rojo: #ff1e56;
+      --morado: #9d4edd;
+      --gris: #1a1a1a;
+    }
+
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #0a0a0a;
-      color: #ffffff;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--negro);
+      color: white;
+      scroll-behavior: smooth;
     }
 
     header {
-      background: linear-gradient(90deg, #000000, #4b0082, #8b0000);
-      padding: 20px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      background: linear-gradient(135deg, #000, #1a001f, #2b0000);
     }
 
     header h1 {
-      margin: 0;
-      font-size: 2.5em;
+      font-size: 3em;
+      color: var(--morado);
+    }
+
+    header p {
+      margin-top: 10px;
+      color: #ccc;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      background: var(--rojo);
+      color: white;
+      cursor: pointer;
+      border-radius: 25px;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--morado);
     }
 
     nav {
-      background-color: #111;
+      position: sticky;
+      top: 0;
+      background: #000;
       padding: 10px;
       text-align: center;
+      z-index: 1000;
     }
 
     nav a {
-      color: #ff4d4d;
+      color: white;
       margin: 0 15px;
       text-decoration: none;
-      font-weight: bold;
     }
 
     nav a:hover {
-      color: #c77dff;
+      color: var(--rojo);
     }
 
     section {
-      padding: 40px;
-    }
-
-    .container {
-      max-width: 1000px;
+      padding: 60px 20px;
+      max-width: 1100px;
       margin: auto;
     }
 
-    .card {
-      background-color: #111;
-      border-left: 5px solid #8b0000;
+    h2 {
       margin-bottom: 20px;
-      padding: 20px;
+      color: var(--morado);
+      text-align: center;
+    }
+
+    .sobre-mi {
+      text-align: center;
+    }
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      text-align: center;
+    }
+
+    .skill {
+      background: var(--gris);
+      padding: 15px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
     }
 
-    .card h2 {
-      color: #c77dff;
+    .proyectos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
     }
 
-    img {
+    .card {
+      background: var(--gris);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(157, 78, 221, 0.5);
+    }
+
+    .card img {
       width: 100%;
-      border-radius: 10px;
-      margin-top: 15px;
+    }
+
+    .card-content {
+      padding: 15px;
+    }
+
+    .contacto {
+      text-align: center;
     }
 
     footer {
-      background-color: #000;
       text-align: center;
       padding: 20px;
-      color: #888;
+      background: #000;
+      color: #777;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Desarrollo de Software</h1>
-  <p>Construyendo el futuro línea por línea</p>
+  <h1>TigerWeird</h1>
+  <p>Desarrollador Full Stack | Apps | Automatización</p>
+  <button class="btn" onclick="document.getElementById('proyectos').scrollIntoView()">Ver proyectos</button>
 </header>
 
 <nav>
-  <a href="#que-es">¿Qué es?</a>
-  <a href="#lenguajes">Lenguajes</a>
-  <a href="#proceso">Proceso</a>
+  <a href="#sobre">Sobre mí</a>
+  <a href="#skills">Skills</a>
+  <a href="#proyectos">Proyectos</a>
   <a href="#contacto">Contacto</a>
 </nav>
 
-<section id="que-es">
-  <div class="container">
-    <div class="card">
-      <h2>¿Qué es el desarrollo de software?</h2>
-      <p>El desarrollo de software es el proceso de crear aplicaciones, sistemas o programas mediante el uso de lenguajes de programación. Incluye diseño, programación, pruebas y mantenimiento.</p>
-      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" alt="Código en pantalla">
-    </div>
+<section id="sobre">
+  <h2>Sobre mí</h2>
+  <div class="sobre-mi">
+    <p>Soy desarrollador de software enfocado en crear soluciones eficientes, automatización y aplicaciones modernas. Me especializo en backend, apps móviles y asistentes inteligentes.</p>
   </div>
 </section>
 
-<section id="lenguajes">
-  <div class="container">
-    <div class="card">
-      <h2>Lenguajes populares</h2>
-      <p>Algunos lenguajes ampliamente utilizados incluyen:</p>
-      <ul>
-        <li>JavaScript - Desarrollo web</li>
-        <li>Python - Inteligencia artificial y backend</li>
-        <li>Java - Aplicaciones móviles y empresariales</li>
-        <li>C# - Desarrollo en entorno Microsoft</li>
-      </ul>
-      <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c" alt="Programación">
-    </div>
+<section id="skills">
+  <h2>Habilidades</h2>
+  <div class="skills">
+    <div class="skill">JavaScript</div>
+    <div class="skill">Python</div>
+    <div class="skill">Java</div>
+    <div class="skill">APIs</div>
+    <div class="skill">Bases de Datos</div>
+    <div class="skill">Android</div>
   </div>
 </section>
 
-<section id="proceso">
-  <div class="container">
+<section id="proyectos">
+  <h2>Proyectos</h2>
+  <div class="proyectos">
+
     <div class="card">
-      <h2>Proceso de desarrollo</h2>
-      <p>El desarrollo de software sigue varias etapas:</p>
-      <ol>
-        <li>Análisis de requisitos</li>
-        <li>Diseño del sistema</li>
-        <li>Implementación</li>
-        <li>Pruebas</li>
-        <li>Mantenimiento</li>
-      </ol>
-      <img src="https://images.unsplash.com/photo-1537432376769-00a3e3c5c3b7" alt="Proceso">
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" alt="Proyecto">
+      <div class="card-content">
+        <h3>Proyecto 1</h3>
+        <p>Aplicación de automatización con IA personalizada.</p>
+      </div>
     </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c" alt="Proyecto">
+      <div class="card-content">
+        <h3>Proyecto 2</h3>
+        <p>Sistema web para gestión de datos.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1537432376769-00a3e3c5c3b7" alt="Proyecto">
+      <div class="card-content">
+        <h3>Proyecto 3</h3>
+        <p>App móvil con reconocimiento de voz.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
 <section id="contacto">
-  <div class="container">
-    <div class="card">
-      <h2>Contacto</h2>
-      <p>¿Interesado en aprender más? Escríbenos a:</p>
-      <p><strong>tigerweird@tigerweird.xyz</strong></p>
-    </div>
+  <h2>Contacto</h2>
+  <div class="contacto">
+    <p>Email personal: tigerkour26@gmail.com</p>
+    <p>Email corporativo: tigerweird@tigerweird.xyz</p>
+    <p>GitHub: github.com/tigerweird</p>
+    <p>Discord: TigerWeird</p>
   </div>
 </section>
 
 <footer>
-  <p>&copy; 2026 Desarrollo de Software | Todos los derechos reservados</p>
+  <p>&copy; 2026 TigerWeird | Portafolio</p>
 </footer>
 
 </body>
