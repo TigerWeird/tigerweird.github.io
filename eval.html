@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>JS Eval IDE</title>
+
+<style>
+/* =========================
+   ATOM ONE DARK
+========================= */
+
+body {
+    margin: 0;
+    background: #282c34;
+    color: #abb2bf;
+    font-family: "Courier New", monospace;
+    overflow-x: hidden;
+}
+
+textarea {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: hidden;
+}
+
+.window {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar {
+    background: #21252b;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons { display: flex; gap: 6px; }
+.btn { width: 12px; height: 12px; border-radius: 50%; }
+.red { background: #e06c75; }
+.yellow { background: #e5c07b; }
+.green { background: #98c379; }
+
+.title {
+    color: #5c6370;
+    font-size: 12px;
+}
+
+/* =========================
+   GRID SINCRONIZADO
+========================= */
+
+.panels {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    overflow: hidden;
+}
+
+.row-content,
+textarea {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere; /* 👈 clave moderna */
+}
+
+/* Panel */
+.panel {
+    background: #21252b;
+    border-right: 1px solid #181a1f;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+.panel:last-child {
+    border-right: none;
+}
+
+/* Header */
+.panel-header {
+    font-size: 11px;
+    padding: 6px;
+    background: #181a1f;
+    color: #5c6370;
+}
+
+/* Contenido */
+.panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px;
+}
+
+/* FILA sincronizada */
+.row {
+    padding: 4px 2px;
+    border-bottom: 1px solid #1e2127;
+    min-height: 18px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* contenido limitado */
+.row-content {
+    overflow: hidden;
+    max-height: 60px;
+    white-space: pre-wrap;
+}
+
+/* expandido */
+.row.expanded .row-content {
+    max-height: none;
+}
+
+/* botón */
+.toggle-btn {
+    font-size: 10px;
+    color: #61afef;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+/* Colores */
+.code { color: #61afef; }
+.console { color: #e5c07b; }
+.result { color: #98c379; }
+.error { color: #e06c75; }
+
+/* Input */
+.input-line {
+    display: flex;
+    position: relative; /* 👈 importante para cursor */
+    padding: 10px;
+    background: #21252b;
+}
+
+.prompt {
+    color: #61afef;
+    margin-right: 5px;
+}
+
+textarea {
+    background: transparent;
+    border: none;
+    color: #abb2bf;
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+    resize: none;
+    height: 20px;
+}
+
+/* Cursor */
+.cursor {
+    width: 8px;
+    height: 16px;
+    background: #abb2bf;
+    margin-left: 2px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%,50%,100% { opacity: 1; }
+    25%,75% { opacity: 0; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="window">
+
+    <div class="top-bar">
+        <div class="buttons">
+            <span class="btn red"></span>
+            <span class="btn yellow"></span>
+            <span class="btn green"></span>
+        </div>
+        <div class="title">JS Eval IDE</div>
+    </div>
+
+    <!-- PANEL GRID -->
+    <div class="panels">
+
+        <div class="panel">
+            <div class="panel-header">CÓDIGO</div>
+            <div class="panel-body" id="codePanel"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">CONSOLA</div>
+            <div class="panel-body" id="consolePanel"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">RESULTADO</div>
+            <div class="panel-body" id="resultPanel"></div>
+        </div>
+
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-line">
+        <span class="prompt" id="prompt">></span>
+        <textarea id="input"></textarea>
+        <span class="cursor"></span>
+    </div>
+
+</div>
+
+<script>
+const input = document.getElementById("input");
+const cursor = document.querySelector(".cursor");
+
+const codePanel = document.getElementById("codePanel");
+const consolePanel = document.getElementById("consolePanel");
+const resultPanel = document.getElementById("resultPanel");
+
+/* =========================
+   AUTOCOMPLETADO
+========================= */
+
+const keywords = ["console", "log", "Math", "window", "document"];
+
+function autocomplete(val) {
+    const match = keywords.find(k => k.startsWith(val));
+    return match || val;
+}
+
+/* =========================
+   CLEAR
+========================= */
+
+function clearAll() {
+    codePanel.innerHTML = "";
+    consolePanel.innerHTML = "";
+    resultPanel.innerHTML = "";
+}
+
+/* =========================
+   CREAR FILA SINCRONIZADA
+========================= */
+
+function createRow(panel, text, cls) {
+    const container = document.createElement("div");
+    container.className = "row " + (cls || "");
+
+    const content = document.createElement("div");
+    content.className = "row-content";
+    content.innerText = text || " ";
+
+    container.appendChild(content);
+
+    // 🔥 detectar si es largo
+    requestAnimationFrame(() => {
+        if (content.scrollHeight > 60) {
+            const btn = document.createElement("div");
+            btn.className = "toggle-btn";
+            btn.innerText = "[+]";
+
+            btn.onclick = () => {
+                container.classList.toggle("expanded");
+                btn.innerText = container.classList.contains("expanded") ? "[-]" : "[+]";
+            };
+
+            container.appendChild(btn);
+        }
+    });
+
+    panel.appendChild(container);
+    return container;
+}
+
+function syncRowHeights(row1, row2, row3) {
+    // esperar a que el DOM calcule tamaños
+    requestAnimationFrame(() => {
+        const h1 = row1.offsetHeight;
+        const h2 = row2.offsetHeight;
+        const h3 = row3.offsetHeight;
+
+        const max = Math.max(h1, h2, h3);
+
+        row1.style.height = max + "px";
+        row2.style.height = max + "px";
+        row3.style.height = max + "px";
+    });
+}
+
+/* =========================
+   EJECUCIÓN
+========================= */
+
+async function run(code) {
+
+    if (code.trim() === "clear") {
+        clearAll();
+        return;
+    }
+
+    let logs = [];
+
+    const originalLog = console.log;
+    console.log = (...args) => logs.push(args.join(" "));
+
+    let result;
+    let error = null;
+
+    try {
+        result = await eval(`(async () => { return ${code} })()`);
+    } catch {
+        try {
+            result = await eval(`(async () => { ${code} })()`);
+        } catch (e) {
+            error = e.toString();
+        }
+    }
+
+    console.log = originalLog;
+    const rowCode = createRow(codePanel, "> " + code, "code");
+    const rowConsole = createRow(consolePanel, logs.join("\n"), "console");
+
+    let rowResult;
+
+    if (error) {
+        rowResult = createRow(resultPanel, error, "error");
+    } else {
+        rowResult = createRow(resultPanel, String(result), "result");
+    }
+
+    // 🔥 sincroniza alturas
+    syncRowHeights(rowCode, rowConsole, rowResult);
+}
+
+/* =========================
+   SCROLL SINCRONIZADO
+========================= */
+
+function scrollAll() {
+    codePanel.scrollTop = codePanel.scrollHeight;
+    consolePanel.scrollTop = consolePanel.scrollHeight;
+    resultPanel.scrollTop = resultPanel.scrollHeight;
+}
+
+/* =========================
+   EVENTOS
+========================= */
+
+input.addEventListener("keydown", function(e) {
+
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        run(input.value);
+        input.value = "";
+        updateCursor();
+    }
+
+    if (e.key === "Tab") {
+        e.preventDefault();
+        input.value = autocomplete(input.value);
+        updateCursor();
+    }
+});
+
+/* =========================
+   CURSOR
+========================= */
+
+function updateCursor() {
+    const span = document.createElement("span");
+    const style = getComputedStyle(input);
+
+    span.style.visibility = "hidden";
+    span.style.position = "absolute";
+    span.style.whiteSpace = "pre-wrap";
+    span.style.font = style.font;
+    span.style.letterSpacing = style.letterSpacing;
+    span.style.maxWidth = input.clientWidth + "px";
+
+    span.innerText = input.value || " ";
+
+    document.body.appendChild(span);
+
+    const textWidth = span.offsetWidth;
+    span.remove();
+
+    // 🔥 obtener ancho del prompt ">"
+    const prompt = document.getElementById("prompt");
+    const promptWidth = prompt.offsetWidth;
+
+    // 🔥 posición final correcta
+    cursor.style.position = "absolute";
+    cursor.style.left = (promptWidth + textWidth) + "px";
+}
+
+input.addEventListener("input", updateCursor);
+input.addEventListener("keydown", () => setTimeout(updateCursor, 0));
+
+input.focus();
+updateCursor();
+</script>
+
+</body>
+</html>
