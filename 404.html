@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>404 | Weird Studio</title>
+<title>Error 404 | Weird Studio</title>
 
 <meta name="description"
-content="La página que intentas visitar no existe o fue movida dentro de Weird Studio.">
+content="La página que intentaste visitar no existe o fue movida dentro de Weird Studio.">
 
 <link rel="icon"
 type="image/png"
 sizes="32x32"
-href="Images/tab_icon.png">
+href="/Images/tab_icon.png">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -28,21 +28,15 @@ href="Images/tab_icon.png">
     box-sizing:border-box;
 }
 
+html{
+    scroll-behavior:smooth;
+}
+
 body{
     font-family:'Inter',sans-serif;
-
     background:#09090d;
     color:#f5f5f5;
-
     overflow:hidden;
-
-    min-height:100vh;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    position:relative;
 }
 
 /* =========================================
@@ -50,10 +44,14 @@ body{
 ========================================= */
 
 :root{
+    --bg:#09090d;
+    --card:#151520;
+
     --primary:#8b5cf6;
     --secondary:#ec4899;
     --accent:#22d3ee;
 
+    --text:#f5f5f5;
     --muted:#9ca3af;
 
     --border:rgba(255,255,255,.07);
@@ -64,7 +62,7 @@ body{
 ========================================= */
 
 .bg-grid{
-    position:absolute;
+    position:fixed;
     inset:0;
 
     background-image:
@@ -76,79 +74,93 @@ body{
     z-index:-2;
 }
 
-.bg-glow{
+.glow-1{
     position:absolute;
 
-    width:700px;
-    height:700px;
+    width:500px;
+    height:500px;
 
-    background:
-    radial-gradient(circle,
-    rgba(139,92,246,.18),
+    background:radial-gradient(circle,
+    rgba(139,92,246,.2),
     transparent 70%);
 
-    top:-250px;
+    top:-200px;
+    left:-100px;
+
+    filter:blur(50px);
+
+    z-index:-1;
+}
+
+.glow-2{
+    position:absolute;
+
+    width:600px;
+    height:600px;
+
+    background:radial-gradient(circle,
+    rgba(34,211,238,.15),
+    transparent 70%);
+
+    bottom:-250px;
     right:-150px;
 
-    filter:blur(40px);
+    filter:blur(50px);
 
     z-index:-1;
 }
 
 /* =========================================
-   CONTAINER
+   MAIN
 ========================================= */
 
 .container{
-    width:min(900px,92%);
+    min-height:100vh;
 
-    background:rgba(255,255,255,.03);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:30px;
+}
+
+.card{
+    width:100%;
+    max-width:1200px;
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+
+    gap:50px;
+
+    background:rgba(21,21,32,.75);
 
     border:1px solid var(--border);
 
-    border-radius:30px;
-
-    padding:50px;
-
-    backdrop-filter:blur(12px);
-
-    box-shadow:
-    0 0 40px rgba(139,92,246,.12);
-
-    position:relative;
+    border-radius:28px;
 
     overflow:hidden;
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:
+    0 0 40px rgba(139,92,246,.15);
 }
 
 /* =========================================
-   TOP BAR
+   LEFT
 ========================================= */
 
-.top-bar{
+.left{
+    padding:70px;
     display:flex;
-    align-items:center;
-    gap:8px;
-
-    margin-bottom:35px;
+    flex-direction:column;
+    justify-content:center;
 }
 
-.circle{
-    width:12px;
-    height:12px;
-    border-radius:50%;
-}
-
-.red{ background:#ff5f56; }
-.yellow{ background:#ffbd2e; }
-.green{ background:#27c93f; }
-
-/* =========================================
-   CONTENT
-========================================= */
-
-.error-code{
-    font-size:8rem;
-    font-weight:800;
+.error{
+    font-size:7rem;
+    font-weight:900;
 
     line-height:1;
 
@@ -159,100 +171,26 @@ body{
 
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-
-    margin-bottom:20px;
 }
 
-.title{
-    font-size:2.2rem;
-    margin-bottom:18px;
+.left h1{
+    margin-top:20px;
+
+    font-size:2.7rem;
+    line-height:1.1;
 }
 
-.description{
+.left p{
+    margin-top:25px;
+
     color:var(--muted);
 
     line-height:1.9;
-
-    max-width:700px;
+    font-size:1.05rem;
 }
-
-/* =========================================
-   TERMINAL
-========================================= */
-
-.terminal{
-    margin-top:40px;
-
-    background:#0f1117;
-
-    border:1px solid rgba(255,255,255,.05);
-
-    border-radius:18px;
-
-    overflow:hidden;
-}
-
-.terminal-header{
-    padding:12px 18px;
-
-    background:#0b0d12;
-
-    border-bottom:1px solid rgba(255,255,255,.04);
-
-    font-size:.9rem;
-
-    color:#6b7280;
-}
-
-.terminal-body{
-    padding:25px;
-
-    font-family:monospace;
-
-    color:#d4d4d4;
-}
-
-.line{
-    margin-bottom:14px;
-}
-
-.line span{
-    color:var(--accent);
-}
-
-.typing{
-    display:inline-block;
-
-    overflow:hidden;
-    white-space:nowrap;
-
-    border-right:2px solid var(--accent);
-
-    width:0;
-
-    animation:
-    typing 4s steps(40,end) forwards,
-    blink .8s infinite;
-}
-
-@keyframes typing{
-    to{
-        width:100%;
-    }
-}
-
-@keyframes blink{
-    50%{
-        border-color:transparent;
-    }
-}
-
-/* =========================================
-   BUTTONS
-========================================= */
 
 .buttons{
-    margin-top:40px;
+    margin-top:35px;
 
     display:flex;
     gap:20px;
@@ -260,7 +198,7 @@ body{
 }
 
 .btn{
-    padding:14px 24px;
+    padding:14px 26px;
 
     border-radius:14px;
 
@@ -284,7 +222,7 @@ body{
     transform:translateY(-3px);
 
     box-shadow:
-    0 0 30px rgba(139,92,246,.3);
+    0 0 30px rgba(139,92,246,.35);
 }
 
 .btn-outline{
@@ -300,51 +238,167 @@ body{
 }
 
 /* =========================================
-   FLOATING TEXT
+   TERMINAL
 ========================================= */
 
-.floating{
+.right{
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:40px;
+}
+
+.terminal{
+    width:100%;
+
+    background:#101018;
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 0 35px rgba(139,92,246,.15);
+}
+
+.terminal-top{
+    background:#0b0b12;
+
+    padding:14px 18px;
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.circle{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+}
+
+.red{ background:#ff5f56; }
+.yellow{ background:#ffbd2e; }
+.green{ background:#27c93f; }
+
+.terminal-body{
+    padding:30px;
+
+    font-family:monospace;
+    font-size:1rem;
+}
+
+.line{
+    margin-bottom:14px;
+    color:#d4d4d4;
+}
+
+.line span{
+    color:var(--accent);
+}
+
+.typing{
+    overflow:hidden;
+    white-space:nowrap;
+
+    border-right:2px solid var(--accent);
+
+    width:0;
+
+    animation:
+    typing 4s steps(40,end) forwards,
+    blink .7s infinite;
+}
+
+.error-line{
+    color:#ff5f56;
+}
+
+.success{
+    color:#22c55e;
+}
+
+@keyframes typing{
+    to{
+        width:100%;
+    }
+}
+
+@keyframes blink{
+    50%{
+        border-color:transparent;
+    }
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer{
     position:absolute;
 
-    color:rgba(255,255,255,.04);
-
-    font-weight:800;
-
-    pointer-events:none;
-
-    user-select:none;
-}
-
-.f1{
-    top:20px;
-    right:40px;
-
-    font-size:5rem;
-}
-
-.f2{
     bottom:20px;
-    left:30px;
+    left:50%;
 
-    font-size:3rem;
+    transform:translateX(-50%);
+
+    color:var(--muted);
+
+    font-size:.9rem;
 }
 
 /* =========================================
    RESPONSIVE
 ========================================= */
 
-@media(max-width:700px){
+@media(max-width:950px){
 
-    .container{
-        padding:35px 25px;
+    body{
+        overflow:auto;
     }
 
-    .error-code{
+    .container{
+        padding:20px;
+    }
+
+    .card{
+        grid-template-columns:1fr;
+    }
+
+    .left{
+        padding:50px 35px 20px;
+    }
+
+    .right{
+        padding:20px 35px 50px;
+    }
+
+    .error{
         font-size:5rem;
     }
 
-    .title{
-        font-size:1.7rem;
+    .left h1{
+        font-size:2.2rem;
+    }
+}
+
+@media(max-width:600px){
+
+    .error{
+        font-size:4rem;
+    }
+
+    .left h1{
+        font-size:1.8rem;
+    }
+
+    .terminal-body{
+        font-size:.9rem;
     }
 }
 
@@ -354,98 +408,110 @@ body{
 <body>
 
 <div class="bg-grid"></div>
-<div class="bg-glow"></div>
+
+<div class="glow-1"></div>
+<div class="glow-2"></div>
 
 <div class="container">
 
-    <div class="floating f1">
-        404
-    </div>
+    <div class="card">
 
-    <div class="floating f2">
-        WEIRD
-    </div>
+        <!-- LEFT -->
 
-    <!-- TOP BAR -->
+        <div class="left">
 
-    <div class="top-bar">
-        <div class="circle red"></div>
-        <div class="circle yellow"></div>
-        <div class="circle green"></div>
-    </div>
-
-    <!-- CONTENT -->
-
-    <div class="error-code">
-        404
-    </div>
-
-    <h1 class="title">
-        Ruta no encontrada
-    </h1>
-
-    <p class="description">
-
-        La página que intentas visitar no existe,
-        fue movida o todavía no ha sido desarrollada
-        dentro de Weird Studio.
-
-        <br><br>
-
-        Tal vez escribiste mal la URL,
-        accediste a un enlace roto
-        o simplemente entraste a una dimensión
-        equivocada del sistema.
-
-    </p>
-
-    <!-- TERMINAL -->
-
-    <div class="terminal">
-
-        <div class="terminal-header">
-            system.log
-        </div>
-
-        <div class="terminal-body">
-
-            <div class="line">
-                <span>root@weirdstudio</span>:~$
-                open requested_page
+            <div class="error">
+                404
             </div>
 
-            <div class="line">
-                ERROR 404:
-                resource not found
-            </div>
+            <h1>
+                Página no encontrada
+            </h1>
 
-            <div class="line">
-                <span>system</span>:~$
-                <span class="typing">
-                    redirecting user...
-                </span>
+            <p>
+                El recurso que intentaste abrir no existe,
+                fue movido o nunca formó parte del sistema.
+
+                <br><br>
+
+                Tal vez el enlace esté roto,
+                la ruta sea incorrecta
+                o simplemente terminaste explorando
+                zonas no indexadas de Weird Studio.
+            </p>
+
+            <div class="buttons">
+
+                <a href="/index.html"
+                class="btn btn-primary">
+                Volver al inicio
+                </a>
+
+                <a href="javascript:history.back()"
+                class="btn btn-outline">
+                Página anterior
+                </a>
+
             </div>
 
         </div>
 
+        <!-- RIGHT -->
+
+        <div class="right">
+
+            <div class="terminal">
+
+                <div class="terminal-top">
+
+                    <div class="circle red"></div>
+                    <div class="circle yellow"></div>
+                    <div class="circle green"></div>
+
+                </div>
+
+                <div class="terminal-body">
+
+                    <div class="line">
+                        <span>system@weirdstudio</span>:~$
+                        locate requested resource
+                    </div>
+
+                    <div class="line typing">
+                        scanning directories...
+                    </div>
+
+                    <div class="line error-line">
+                        ERROR 404:
+                        target not found
+                    </div>
+
+                    <div class="line">
+                        <span>path:</span>
+                        /unknown/location
+                    </div>
+
+                    <div class="line">
+                        attempting fallback redirect...
+                    </div>
+
+                    <div class="line success">
+                        recommendation:
+                        return to main interface
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- BUTTONS -->
+</div>
 
-    <div class="buttons">
-
-        <a href="/index.html"
-        class="btn btn-primary">
-        Volver al inicio
-        </a>
-
-        <a href="javascript:history.back()"
-        class="btn btn-outline">
-        Página anterior
-        </a>
-
-    </div>
-
+<div class="footer">
+    © 2026 Weird Studio · TigerWeird
 </div>
 
 </body>
